@@ -1,2 +1,2 @@
-include ':app', ':ui'
+include ':app', ':ui', ':network', ':domain'
 rootProject.name='SpaceX'
