@@ -4,11 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import javax.inject.Inject
 import javax.inject.Provider
+import javax.inject.Singleton
 
 @Suppress("UNCHECKED_CAST")
 class SpaceXViewModelProviderFactory @Inject constructor(
     private val creators: MutableMap<Class<out ViewModel>, Provider<ViewModel>>
 ) : ViewModelProvider.Factory {
+    //override fun <T : ViewModel?> create(modelClass: Class<T>): T = creators[modelClass]?.get() as T
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         var creator: Provider<out ViewModel>? = creators[modelClass]

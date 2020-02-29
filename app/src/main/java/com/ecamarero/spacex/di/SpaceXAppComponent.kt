@@ -4,13 +4,15 @@ import com.ecamarero.spacex.SpaceXApp
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
+import javax.inject.Singleton
 
 @Component(
     modules = [
         AndroidSupportInjectionModule::class,
-        ViewModelFactoryModule::class,
         SpaceXActivityModule::class,
+        ViewModelFactoryModule::class,
         LaunchesDataSourceModule::class
     ]
 )
+@Singleton
 interface SpaceXAppComponent : AndroidInjector<SpaceXApp>
