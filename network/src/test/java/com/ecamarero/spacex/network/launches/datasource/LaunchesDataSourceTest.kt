@@ -16,7 +16,7 @@ class LaunchesDataSourceTest {
     @get:Rule
     val testSchedulerRule = RxImmediateSchedulerRule()
 
-    val clientModule = HttpClientModule()
+    val clientModule = HttpClientModule
 
     private lateinit var dataSource: LaunchesDataSource
 

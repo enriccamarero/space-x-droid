@@ -3,7 +3,14 @@
     package="com.ecamarero.spacex.ui">
 
     <application>
-        <activity android:name=".SpaceX"></activity>
+        <activity android:name="com.ecamarero.spacex.ui.SpaceXActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

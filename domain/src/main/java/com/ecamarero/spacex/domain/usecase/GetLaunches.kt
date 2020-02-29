@@ -4,9 +4,13 @@ import com.ecamarero.spacex.domain.launches.model.Launch
 import com.ecamarero.spacex.domain.launches.repository.LaunchParams
 import com.ecamarero.spacex.domain.launches.repository.LaunchesRepository
 import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class GetLaunches internal constructor(private val launchesRepository: LaunchesRepository) {
-    
+class GetLaunches internal @Inject constructor(
+    private val launchesRepository: LaunchesRepository
+) {
+
     operator fun invoke(
         order: LaunchParams.Order = LaunchParams.Order.Ascending,
         launchSuccessful: Boolean? = null,
@@ -23,6 +27,7 @@ class GetLaunches internal constructor(private val launchesRepository: LaunchesR
             .toObservable()
             .map { Result(it) }
             .onErrorReturn { Result(error = it) }
+            .subscribeOn(Schedulers.io())
     }
 
     companion object {

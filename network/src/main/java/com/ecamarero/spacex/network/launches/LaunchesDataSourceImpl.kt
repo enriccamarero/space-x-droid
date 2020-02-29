@@ -6,8 +6,9 @@ import com.ecamarero.spacex.domain.launches.model.Launch
 import com.ecamarero.spacex.network.launches.model.LaunchParamsMapper
 import com.ecamarero.spacex.network.launches.model.LaunchResponseMapper
 import io.reactivex.Single
+import javax.inject.Inject
 
-class LaunchesDataSourceImpl(
+class LaunchesDataSourceImpl @Inject constructor(
     private val launchesApi: LaunchesApi
 ) : LaunchesDataSource {
 

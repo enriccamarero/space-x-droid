@@ -33,6 +33,8 @@ dependencies {
 
     implementation "io.reactivex.rxjava2:rxkotlin:2.4.0"
 
+    implementation 'javax.inject:javax.inject:1'
+
     testImplementation 'junit:junit:4.12'
     testImplementation "io.mockk:mockk:1.9.3.kotlin12"
     testImplementation "com.google.truth:truth:1.0.1"
