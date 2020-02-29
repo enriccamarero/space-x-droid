@@ -1,8 +1,7 @@
 package com.ecamarero.spacex.network.launches.datasource
 
-import com.ecamarero.spacex.domain.launches.datasource.LaunchParams
-import com.ecamarero.spacex.domain.launches.datasource.LaunchesRxDataSource
-import com.ecamarero.spacex.domain.launches.datasource.Order
+import com.ecamarero.spacex.domain.launches.repository.LaunchParams
+import com.ecamarero.spacex.domain.launches.datasource.LaunchesDataSource
 import com.ecamarero.spacex.domain.launches.model.Launch
 import com.ecamarero.spacex.network.client.HttpClientModule
 import com.ecamarero.spacex.network.launches.LaunchesDataSourceImpl
@@ -12,14 +11,14 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class LaunchesRxDataSourceTest {
+class LaunchesDataSourceTest {
 
     @get:Rule
     val testSchedulerRule = RxImmediateSchedulerRule()
 
     val clientModule = HttpClientModule()
 
-    private lateinit var dataSource: LaunchesRxDataSource
+    private lateinit var dataSource: LaunchesDataSource
 
     @Before
     fun setUp() {
@@ -30,7 +29,7 @@ class LaunchesRxDataSourceTest {
     @Test
     fun `Fetching all launches returns a list of launches`() {
         dataSource
-            .fetchAllLaunchesSingle()
+            .fetchLaunches()
             .test()
             .assertComplete()
             .assertNoErrors()
@@ -44,7 +43,7 @@ class LaunchesRxDataSourceTest {
             launchYear = expectedYear
         )
         dataSource
-            .fetchAllLaunchesSingle(launchParams)
+            .fetchLaunches(launchParams)
             .test()
             .assertComplete()
             .assertNoErrors()
@@ -58,7 +57,7 @@ class LaunchesRxDataSourceTest {
             launchYear = expectedYear
         )
         dataSource
-            .fetchAllLaunchesSingle(launchParams)
+            .fetchLaunches(launchParams)
             .test()
             .assertComplete()
             .assertNoErrors()
@@ -72,7 +71,7 @@ class LaunchesRxDataSourceTest {
             launchSuccess = launchSuccess
         )
         dataSource
-            .fetchAllLaunchesSingle(launchParams)
+            .fetchLaunches(launchParams)
             .test()
             .assertComplete()
             .assertNoErrors()
@@ -87,7 +86,7 @@ class LaunchesRxDataSourceTest {
             launchSuccess = launchSuccess
         )
         dataSource
-            .fetchAllLaunchesSingle(launchParams)
+            .fetchLaunches(launchParams)
             .test()
             .assertComplete()
             .assertNoErrors()
@@ -96,12 +95,12 @@ class LaunchesRxDataSourceTest {
 
     @Test
     fun `Launches can be sorted asc`() {
-        val order: Order = Order.Ascending
+        val order: LaunchParams.Order = LaunchParams.Order.Ascending
         val launchParams = LaunchParams(
             order = order
         )
         val assertNoErrors = dataSource
-            .fetchAllLaunchesSingle(launchParams)
+            .fetchLaunches(launchParams)
             .test()
             .assertComplete()
             .assertNoErrors()
@@ -112,12 +111,12 @@ class LaunchesRxDataSourceTest {
 
     @Test
     fun `Launches can be sorted desc`() {
-        val order: Order = Order.Descending
+        val order: LaunchParams.Order = LaunchParams.Order.Descending
         val launchParams = LaunchParams(
             order = order
         )
         val assertNoErrors = dataSource
-            .fetchAllLaunchesSingle(launchParams)
+            .fetchLaunches(launchParams)
             .test()
             .assertComplete()
             .assertNoErrors()

@@ -1,4 +1,4 @@
-package com.ecamarero.spacex.domain.launches.datasource
+package com.ecamarero.spacex.domain.launches.repository
 
 data class LaunchParams(
     val launchYear: Int? = null,

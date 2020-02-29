@@ -1,6 +1,6 @@
 package com.ecamarero.spacex.domain.launches.repository
 
-import com.ecamarero.spacex.domain.launches.datasource.LaunchesRxDataSource
+import com.ecamarero.spacex.domain.launches.datasource.LaunchesDataSource
 import com.ecamarero.spacex.domain.launches.model.Launch
 import io.mockk.every
 import io.mockk.mockk
@@ -11,26 +11,49 @@ import org.junit.Test
 
 class LaunchesRepositoryTest {
 
-    private val launchesRxDataSource: LaunchesRxDataSource = mockk()
+    private val launchesDataSource: LaunchesDataSource = mockk()
     private lateinit var launchesRepository: LaunchesRepository
 
     @Before
     fun setUp() {
-        launchesRepository = LaunchesRepository(launchesRxDataSource)
+        launchesRepository = LaunchesRepository(launchesDataSource)
     }
 
     @Test
-    fun `Fetching all launches returns a list of launches`() {
-        every { launchesRxDataSource.fetchAllLaunchesSingle() } returns Single.just(listOf())
+    fun `Launches are retrieved from the datasource`() {
+        every { launchesDataSource.fetchLaunches(any()) } returns Single.just(listOf())
         launchesRepository
-            .getAllLaunches()
+            .getLaunches()
             .test()
             .assertComplete()
             .assertNoErrors()
             .assertValue { it is List<Launch> }
-            .awaitTerminalEvent()
 
-        verify { launchesRxDataSource.fetchAllLaunchesSingle() }
+        verify { launchesDataSource.fetchLaunches() }
     }
 
+    @Test
+    fun `Params are forwarded to the datasource`() {
+        val launchParams = LaunchParams()
+        every { launchesDataSource.fetchLaunches(launchParams) } returns Single.just(listOf())
+        launchesRepository
+            .getLaunches(launchParams)
+            .test()
+            .assertComplete()
+            .assertNoErrors()
+        verify { launchesDataSource.fetchLaunches(launchParams) }
+    }
+
+
+    @Test
+    fun `Errors are downstreamed`() {
+        val expectedError = Throwable()
+        every { launchesDataSource.fetchLaunches(any()) } returns Single.error(expectedError)
+        launchesRepository
+            .getLaunches()
+            .test()
+            .assertError(expectedError)
+
+        verify { launchesDataSource.fetchLaunches() }
+    }
 }

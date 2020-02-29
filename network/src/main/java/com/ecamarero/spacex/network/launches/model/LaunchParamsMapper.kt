@@ -1,8 +1,7 @@
 package com.ecamarero.spacex.network.launches.model
 
-import com.ecamarero.spacex.domain.launches.datasource.LaunchParams
-import com.ecamarero.spacex.domain.launches.datasource.LaunchParams.Order
-import com.ecamarero.spacex.network.launches.model.LaunchRequest
+import com.ecamarero.spacex.domain.launches.repository.LaunchParams
+import com.ecamarero.spacex.domain.launches.repository.LaunchParams.Order
 
 object LaunchParamsMapper {
     fun toRequest(from: LaunchParams?): LaunchRequest {
