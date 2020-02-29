@@ -4,7 +4,9 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.ecamarero.spacex.domain.launches.datasource.LaunchesCoroutinesDataSource
 import com.ecamarero.spacex.domain.launches.model.Launch
 import com.ecamarero.spacex.network.launches.HttpTestClientModule
-import com.google.common.truth.Truth
+import com.ecamarero.spacex.network.launches.LAUNCHES_URL
+import com.ecamarero.spacex.network.utils.withExpectedUrl
+import io.ktor.client.features.ResponseException
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
@@ -27,6 +29,7 @@ class LaunchesCoroutinesDataSourceTest {
     @Test
     fun `Fetching all launches returns a list of launches`() {
         clientModule.success = true
+        clientModule.withExpectedUrl(LAUNCHES_URL)
         assert(
             runBlocking {
                 dataSource.fetchAllLaunchesSuspend()
@@ -42,7 +45,7 @@ class LaunchesCoroutinesDataSourceTest {
                 dataSource.fetchAllLaunchesSuspend()
             }
             assert(false)
-        } catch (e: Throwable) {
+        } catch (e: ResponseException) {
             assert(e != null)
         }
     }

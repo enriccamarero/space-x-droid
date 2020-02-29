@@ -1,4 +1,4 @@
-package com.ecamarero.spacex.network.launches.utils
+package com.ecamarero.spacex.network.utils
 
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.plugins.RxJavaPlugins

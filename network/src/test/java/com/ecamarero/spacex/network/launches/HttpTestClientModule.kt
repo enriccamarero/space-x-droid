@@ -3,15 +3,18 @@ package com.ecamarero.spacex.network.launches
 import com.ecamarero.spacex.network.client.setUpDefaultRequest
 import com.ecamarero.spacex.network.client.setUpJsonSerializer
 import com.ecamarero.spacex.network.launches.datasource.LaunchesDataSourceImpl
+import com.google.common.truth.Truth.assertThat
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.request.HttpRequestData
+import io.ktor.http.HttpStatusCode
 
 class HttpTestClientModule {
 
     var success: Boolean = true
     var empty: Boolean = false
+    var expectedUrl: String? = null
 
     fun providesHttpClient(): HttpClient {
         return HttpClient(MockEngine) {
@@ -19,10 +22,22 @@ class HttpTestClientModule {
             setUpJsonSerializer()
             engine {
                 addHandler { request ->
+                    expectedUrl?.let {
+                        assert(request.url.toString() == expectedUrl)
+                    }
                     when {
-                        success -> respond(generateSuccess(request))
-                        empty -> respond(content = "[]")
-                        else -> error("Provide a mocked response for this request")
+                        success -> respond(
+                            content = generateSuccess(request),
+                            status = HttpStatusCode.OK
+                        )
+                        empty -> respond(
+                            content = "[]",
+                            status = HttpStatusCode.OK
+                        )
+                        else -> respond(
+                            content = "ERROR",
+                            status = HttpStatusCode.ServiceUnavailable
+                        )
                     }
                 }
             }

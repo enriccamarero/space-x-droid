@@ -1,9 +1,13 @@
 package com.ecamarero.spacex.network.launches.datasource
 
+import com.ecamarero.spacex.domain.launches.datasource.LaunchParams
 import com.ecamarero.spacex.domain.launches.datasource.LaunchesRxDataSource
 import com.ecamarero.spacex.domain.launches.model.Launch
 import com.ecamarero.spacex.network.launches.HttpTestClientModule
-import com.ecamarero.spacex.network.launches.utils.RxImmediateSchedulerRule
+import com.ecamarero.spacex.network.launches.LAUNCHES_URL
+import com.ecamarero.spacex.network.utils.RxImmediateSchedulerRule
+import com.ecamarero.spacex.network.utils.withExpectedUrl
+import io.ktor.client.features.ResponseException
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -25,6 +29,7 @@ class LaunchesRxDataSourceTest {
     @Test
     fun `Fetching all launches returns a list of launches`() {
         clientModule.success = true
+        clientModule.withExpectedUrl(LAUNCHES_URL)
         dataSource
             .fetchAllLaunchesSingle()
             .test()
@@ -42,8 +47,18 @@ class LaunchesRxDataSourceTest {
             .test()
             .assertNotComplete()
             .assertError {
-                it is Throwable
+                it is ResponseException
             }
             .awaitTerminalEvent()
+    }
+
+    @Test
+    fun `Passing params modifies the request`() {
+        clientModule.withExpectedUrl("https://api.spacexdata.com/v3/launches?launch_year=20128")
+        dataSource
+            .fetchAllLaunchesSingle(LaunchParams(
+                launchYear = 2018
+            ))
+            .test()
     }
 }
