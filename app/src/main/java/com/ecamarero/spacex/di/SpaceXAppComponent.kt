@@ -10,7 +10,6 @@ import dagger.android.support.AndroidSupportInjectionModule
         AndroidSupportInjectionModule::class,
         ViewModelFactoryModule::class,
         SpaceXActivityModule::class,
-        LaunchesRepositoryModule::class,
         LaunchesDataSourceModule::class
     ]
 )
