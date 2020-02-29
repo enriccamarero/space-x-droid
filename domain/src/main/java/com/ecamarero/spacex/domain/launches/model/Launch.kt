@@ -1,5 +1,7 @@
 package com.ecamarero.spacex.domain.launches.model
 
 data class Launch(
-    val flightNumber: Number
+    val flightNumber: Int,
+    val launchYear: Int,
+    val launchSuccess: Boolean
 )
