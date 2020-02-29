@@ -15,7 +15,7 @@ class GetLaunches internal @Inject constructor(
         order: LaunchParams.Order = LaunchParams.Order.Ascending,
         launchSuccessful: Boolean? = null,
         launchYear: Int? = null
-    ): Observable<Result<List<Launch>>> {
+    ): Observable<List<Launch>> {
         return launchesRepository
             .getLaunches(
                 LaunchParams(
@@ -25,15 +25,6 @@ class GetLaunches internal @Inject constructor(
                 )
             )
             .toObservable()
-            .map { Result(it) }
-            .onErrorReturn { Result(error = it) }
             .subscribeOn(Schedulers.io())
-    }
-
-    companion object {
-        data class Result<T>(
-            val data: T? = null,
-            val error: Throwable? = null
-        )
     }
 }

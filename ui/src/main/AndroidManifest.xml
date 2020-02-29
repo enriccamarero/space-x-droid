@@ -3,7 +3,7 @@
     package="com.ecamarero.spacex.ui">
 
     <application>
-        <activity android:name="com.ecamarero.spacex.ui.SpaceXActivity">
+        <activity android:name="com.ecamarero.spacex.ui.launches.LaunchesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

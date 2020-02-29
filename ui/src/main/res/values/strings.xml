@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ui</string>
+    <string name="mission_label">Mission:</string>
+    <string name="date_label">Date/time:</string>
+    <string name="rocket_label">Rocket:</string>
+    <string name="days_from_now_label">Days from now:</string>
+    <string name="days_since_now_label">Days since now:</string>
 </resources>

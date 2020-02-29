@@ -3,9 +3,9 @@ package com.ecamarero.spacex.network.launches.datasource
 import com.ecamarero.spacex.domain.launches.repository.LaunchParams
 import com.ecamarero.spacex.domain.launches.datasource.LaunchesDataSource
 import com.ecamarero.spacex.domain.launches.model.Launch
+import com.ecamarero.spacex.domain.utils.RxImmediateSchedulerRule
 import com.ecamarero.spacex.network.client.HttpClientModule
 import com.ecamarero.spacex.network.launches.LaunchesDataSourceImpl
-import com.ecamarero.spacex.network.utils.RxImmediateSchedulerRule
 import com.google.common.truth.Truth
 import org.junit.Before
 import org.junit.Rule
@@ -47,7 +47,7 @@ class LaunchesDataSourceTest {
             .test()
             .assertComplete()
             .assertNoErrors()
-            .assertValue { it.all { it.launchYear == expectedYear } }
+            .assertValue { it.all { it.launchYear == expectedYear.toString() } }
     }
 
     @Test
@@ -61,7 +61,7 @@ class LaunchesDataSourceTest {
             .test()
             .assertComplete()
             .assertNoErrors()
-            .assertValue { it.all { it.launchYear == expectedYear } }
+            .assertValue { it.all { it.launchYear == expectedYear.toString() } }
     }
 
     @Test

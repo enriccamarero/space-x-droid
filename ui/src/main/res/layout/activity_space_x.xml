@@ -4,6 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ecamarero.spacex.ui.SpaceXActivity">
+    tools:context="com.ecamarero.spacex.ui.launches.LaunchesActivity">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/launch_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

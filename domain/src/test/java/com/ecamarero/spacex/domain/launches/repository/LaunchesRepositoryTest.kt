@@ -2,14 +2,19 @@ package com.ecamarero.spacex.domain.launches.repository
 
 import com.ecamarero.spacex.domain.launches.datasource.LaunchesDataSource
 import com.ecamarero.spacex.domain.launches.model.Launch
+import com.ecamarero.spacex.domain.utils.RxImmediateSchedulerRule
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.Single
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 class LaunchesRepositoryTest {
+
+    @get:Rule
+    val testSchedulerRule = RxImmediateSchedulerRule()
 
     private val launchesDataSource: LaunchesDataSource = mockk()
     private lateinit var launchesRepository: LaunchesRepository
