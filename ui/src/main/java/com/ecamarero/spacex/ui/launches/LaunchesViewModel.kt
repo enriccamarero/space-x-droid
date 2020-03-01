@@ -14,7 +14,12 @@ class LaunchesViewModel @Inject constructor(
     private val getLaunches: GetLaunches
 ) : ViewModel() {
 
-    private val _launchesLiveData = MutableLiveData<LaunchesActivityState>().apply { value = LaunchesActivityState() }
+    private val _filterLiveData =
+        MutableLiveData<LaunchesFilterState>().apply { value = LaunchesFilterState() }
+    internal val filterLiveData = _filterLiveData
+
+    private val _launchesLiveData =
+        MutableLiveData<LaunchesActivityState>().apply { value = LaunchesActivityState() }
     internal val launchesLiveData = _launchesLiveData
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
@@ -39,4 +44,41 @@ class LaunchesViewModel @Inject constructor(
         super.onCleared()
         compositeDisposable.clear()
     }
+
+    fun removeYear(year: String) {
+        _filterLiveData.value = _filterLiveData.value?.copy(
+            years = _filterLiveData.value?.years?.minus(year) ?: emptySet()
+        ) ?: LaunchesFilterState()
+    }
+
+    fun onYearAdded(year: String) {
+        if (year.isNotBlank()) {
+            _filterLiveData.value = _filterLiveData.value?.copy(
+                years = _filterLiveData.value?.years?.plus(year) ?: setOf(year)
+            ) ?: LaunchesFilterState(years = setOf(year))
+        }
+    }
+
+    fun onSortingChanged() {
+        _filterLiveData.value = _filterLiveData.value?.copy(
+            sorting = if (_filterLiveData.value?.sorting is Sorting.Ascending) Sorting.Descending else Sorting.Ascending
+        ) ?: LaunchesFilterState()
+    }
+
+    fun onOnlySuccessfulLaunchesChanged(checked: Boolean) {
+        _filterLiveData.value = _filterLiveData.value?.copy(
+            onlySuccessfulLaunches = checked
+        ) ?: LaunchesFilterState(onlySuccessfulLaunches = checked)
+    }
+}
+
+data class LaunchesFilterState(
+    val years: Set<String> = emptySet(),
+    val sorting: Sorting = Sorting.Ascending,
+    val onlySuccessfulLaunches: Boolean = false
+)
+
+sealed class Sorting {
+    object Ascending : Sorting()
+    object Descending : Sorting()
 }
