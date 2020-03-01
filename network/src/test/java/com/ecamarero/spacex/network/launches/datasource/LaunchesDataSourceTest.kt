@@ -1,12 +1,16 @@
 package com.ecamarero.spacex.network.launches.datasource
 
-import com.ecamarero.spacex.domain.launches.repository.LaunchParams
 import com.ecamarero.spacex.domain.launches.datasource.LaunchesDataSource
 import com.ecamarero.spacex.domain.launches.model.Launch
+import com.ecamarero.spacex.domain.launches.repository.LaunchParams
 import com.ecamarero.spacex.domain.utils.RxImmediateSchedulerRule
-import com.ecamarero.spacex.di.HttpClientModule
+import com.ecamarero.spacex.network.launches.LaunchesApi
 import com.ecamarero.spacex.network.launches.LaunchesDataSourceImpl
-import com.google.common.truth.Truth
+import io.mockk.Ordering
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import io.reactivex.Single
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -16,112 +20,287 @@ class LaunchesDataSourceTest {
     @get:Rule
     val testSchedulerRule = RxImmediateSchedulerRule()
 
-    val clientModule = com.ecamarero.spacex.di.HttpClientModule
+    private val launchesApi: LaunchesApi = mockk()
 
     private lateinit var dataSource: LaunchesDataSource
 
     @Before
     fun setUp() {
-        dataSource =
-            LaunchesDataSourceImpl(clientModule.providesLaunchesApi())
+        dataSource = LaunchesDataSourceImpl(launchesApi)
     }
 
+    @Suppress("USELESS_IS_CHECK")
     @Test
     fun `Fetching all launches returns a list of launches`() {
+        every { launchesApi.launches(any(), any(), any()) } returns Single.just(listOf())
         dataSource
-            .fetchLaunches()
+            .fetchLaunches(LaunchParams())
             .test()
             .assertComplete()
             .assertNoErrors()
             .assertValue { it is List<Launch> }
+
+        verify {
+            launchesApi.launches(
+                launchYear = any(),
+                launchSuccess = any(),
+                order = any()
+            )
+        }
     }
 
     @Test
-    fun `Fetching all launches of a given year only returns those launches 1`() {
-        val expectedYear = 2006
+    fun `Fetching launches can fail`() {
+        val throwable = Throwable()
+        every { launchesApi.launches(any(), any(), any()) } returns Single.error(throwable)
+        dataSource
+            .fetchLaunches(LaunchParams())
+            .test()
+            .assertError(throwable)
+            .assertNotComplete()
+
+        verify {
+            launchesApi.launches(
+                launchYear = any(),
+                launchSuccess = any(),
+                order = any()
+            )
+        }
+    }
+
+    @Test
+    fun `Fetching all launches calls the api`() {
+        every { launchesApi.launches(any(), any(), any()) } returns Single.just(listOf())
+        dataSource
+            .fetchLaunches(LaunchParams())
+            .test()
+            .assertComplete()
+            .assertNoErrors()
+
+        verify {
+            launchesApi.launches(
+                launchYear = any(),
+                launchSuccess = any(),
+                order = any()
+            )
+        }
+    }
+
+    @Test
+    fun `Fetching launches ascending results in "asc" parameter`() {
+        every { launchesApi.launches(any(), any(), any()) } returns Single.just(listOf())
         val launchParams = LaunchParams(
-            launchYear = expectedYear
+            order = LaunchParams.Order.Ascending
         )
         dataSource
             .fetchLaunches(launchParams)
             .test()
             .assertComplete()
             .assertNoErrors()
-            .assertValue { it.all { it.launchYear == expectedYear.toString() } }
+
+        verify {
+            launchesApi.launches(
+                launchYear = any(),
+                order = "asc",
+                launchSuccess = any()
+            )
+        }
     }
 
     @Test
-    fun `Fetching all launches of a given year only returns those launches 2`() {
-        val expectedYear = 2012
+    fun `Fetching launches descending results in "desc" parameter`() {
+        every { launchesApi.launches(any(), any(), any()) } returns Single.just(listOf())
         val launchParams = LaunchParams(
-            launchYear = expectedYear
+            order = LaunchParams.Order.Descending
         )
         dataSource
             .fetchLaunches(launchParams)
             .test()
             .assertComplete()
             .assertNoErrors()
-            .assertValue { it.all { it.launchYear == expectedYear.toString() } }
+
+        verify {
+            launchesApi.launches(
+                launchYear = any(),
+                order = "desc",
+                launchSuccess = any()
+            )
+        }
     }
 
     @Test
-    fun `Fetching all successful launches only returns those launches`() {
-        val launchSuccess = true
+    fun `Fetching only successful launches results in launch_success=true parameter`() {
+        every { launchesApi.launches(any(), any(), any()) } returns Single.just(listOf())
         val launchParams = LaunchParams(
-            onlySuccessful = launchSuccess
+            onlySuccessful = true
         )
         dataSource
             .fetchLaunches(launchParams)
             .test()
             .assertComplete()
             .assertNoErrors()
-            .assertValue { it.all { it.launchSuccess == launchSuccess } }
+
+        verify {
+            launchesApi.launches(
+                launchYear = any(),
+                order = any(),
+                launchSuccess = true
+            )
+        }
     }
 
-
     @Test
-    fun `Fetching all unsuccessful launches only returns those launches`() {
-        val launchSuccess = false
+    fun `Fetching all launches results in launch_success=null parameter`() {
+        every { launchesApi.launches(any(), any(), any()) } returns Single.just(listOf())
         val launchParams = LaunchParams(
-            onlySuccessful = launchSuccess
+            onlySuccessful = false
         )
         dataSource
             .fetchLaunches(launchParams)
             .test()
             .assertComplete()
             .assertNoErrors()
-            .assertValue { it.all { it.launchSuccess == launchSuccess } }
+
+        verify {
+            launchesApi.launches(
+                launchYear = any(),
+                order = any(),
+                launchSuccess = null
+            )
+        }
     }
 
     @Test
-    fun `Launches can be sorted asc`() {
-        val order: LaunchParams.Order = LaunchParams.Order.Ascending
+    fun `Fetching launches with N years results in N calls concatenated`() {
+        every { launchesApi.launches(any(), any(), any()) } returns Single.just(listOf())
+        val yearsSelected = listOf(1, 2, 3)
         val launchParams = LaunchParams(
-            order = order
+            launchYears = yearsSelected
         )
-        val assertNoErrors = dataSource
-            .fetchLaunches(launchParams)
-            .test()
-            .assertComplete()
-            .assertNoErrors()
-        Truth.assertThat(assertNoErrors.values().first())
-            .isInOrder { o1, o2 -> (o1 as Launch).launchYear.compareTo((o2 as Launch).launchYear) }
-    }
 
-
-    @Test
-    fun `Launches can be sorted desc`() {
-        val order: LaunchParams.Order = LaunchParams.Order.Descending
-        val launchParams = LaunchParams(
-            order = order
-        )
-        val assertNoErrors = dataSource
+        dataSource
             .fetchLaunches(launchParams)
             .test()
             .assertComplete()
             .assertNoErrors()
 
-        Truth.assertThat(assertNoErrors.values().first())
-            .isInOrder { o1, o2 -> -((o1 as Launch).launchYear.compareTo((o2 as Launch).launchYear)) }
+        verify(exactly = yearsSelected.size) {
+            launchesApi.launches(
+                launchYear = any(),
+                launchSuccess = any(),
+                order = any()
+            )
+        }
+
+        verify(ordering = Ordering.ORDERED) {
+            yearsSelected.map {
+                launchesApi.launches(
+                    launchYear = it,
+                    launchSuccess = any(),
+                    order = any()
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `Fetching launches with N years can fail - If one or more fail downstreams error`() {
+        val throwable = Throwable()
+        every { launchesApi.launches(any(), any(), any()) } returns Single.just(listOf())
+        every { launchesApi.launches(1, any(), any()) } returns Single.error(throwable)
+        val yearsSelected = listOf(1, 2, 3)
+        val launchParams = LaunchParams(
+            launchYears = yearsSelected
+        )
+
+        dataSource
+            .fetchLaunches(launchParams)
+            .test()
+            .assertError(throwable)
+            .assertNotComplete()
+
+        verify(exactly = yearsSelected.size) {
+            launchesApi.launches(
+                launchYear = any(),
+                launchSuccess = any(),
+                order = any()
+            )
+        }
+
+        verify(ordering = Ordering.ORDERED) {
+            yearsSelected.map {
+                launchesApi.launches(
+                    launchYear = it,
+                    launchSuccess = any(),
+                    order = any()
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `Fetching launches with N years and ASCENDING results in N calls concatenated in order ASC`() {
+        every { launchesApi.launches(any(), any(), any()) } returns Single.just(listOf())
+        val yearsSelected = listOf(1, 2, 3)
+        val launchParams = LaunchParams(
+            launchYears = yearsSelected,
+            order = LaunchParams.Order.Ascending
+        )
+        dataSource
+            .fetchLaunches(launchParams)
+            .test()
+            .assertComplete()
+            .assertNoErrors()
+
+        verify(exactly = yearsSelected.size) {
+            launchesApi.launches(
+                launchYear = any(),
+                launchSuccess = any(),
+                order = any()
+            )
+        }
+
+        verify(ordering = Ordering.ORDERED) {
+            yearsSelected.map {
+                launchesApi.launches(
+                    launchYear = it,
+                    launchSuccess = any(),
+                    order = any()
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `Fetching launches with N years and DESCENDING results in N calls concatenated in order DESC`() {
+        every { launchesApi.launches(any(), any(), any()) } returns Single.just(listOf())
+        val yearsSelected = listOf(1, 2, 3)
+        val launchParams = LaunchParams(
+            launchYears = yearsSelected,
+            order = LaunchParams.Order.Descending
+        )
+        dataSource
+            .fetchLaunches(launchParams)
+            .test()
+            .assertComplete()
+            .assertNoErrors()
+
+        verify(exactly = yearsSelected.size) {
+            launchesApi.launches(
+                launchYear = any(),
+                launchSuccess = any(),
+                order = any()
+            )
+        }
+
+        verify(ordering = Ordering.ORDERED) {
+            yearsSelected.sortedDescending().map {
+                launchesApi.launches(
+                    launchYear = it,
+                    launchSuccess = any(),
+                    order = any()
+                )
+            }
+        }
     }
 }

@@ -10,8 +10,7 @@ import kotlin.math.absoluteValue
 internal object LaunchesUIMapper {
     fun toUI(from: List<Launch>): List<LaunchUI> {
         return from.map {
-            val daysForLaunch =
-                getDaysForLaunch(it.launchDateUtc)
+            val daysForLaunch = getDaysForLaunch(it.launchDateUtc)
             LaunchUI(
                 flightNumber = it.flightNumber,
                 missionName = it.missionName,

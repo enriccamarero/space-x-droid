@@ -1,7 +1,6 @@
 package com.ecamarero.spacex.network.company.model
 
 import com.google.gson.annotations.SerializedName
-import java.math.BigDecimal
 
 data class CompanyInfoResponse(
     @SerializedName("name") val name: String,

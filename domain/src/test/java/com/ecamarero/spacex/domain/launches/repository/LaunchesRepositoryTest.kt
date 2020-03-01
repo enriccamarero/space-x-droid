@@ -24,17 +24,19 @@ class LaunchesRepositoryTest {
         launchesRepository = LaunchesRepository(launchesDataSource)
     }
 
+    @Suppress("USELESS_IS_CHECK")
     @Test
     fun `Launches are retrieved from the datasource`() {
         every { launchesDataSource.fetchLaunches(any()) } returns Single.just(listOf())
+        val launchParams = LaunchParams()
         launchesRepository
-            .getLaunches()
+            .getLaunches(launchParams)
             .test()
             .assertComplete()
             .assertNoErrors()
             .assertValue { it is List<Launch> }
 
-        verify { launchesDataSource.fetchLaunches() }
+        verify { launchesDataSource.fetchLaunches(launchParams) }
     }
 
     @Test
@@ -53,12 +55,13 @@ class LaunchesRepositoryTest {
     @Test
     fun `Errors are downstreamed`() {
         val expectedError = Throwable()
+        val launchParams = LaunchParams()
         every { launchesDataSource.fetchLaunches(any()) } returns Single.error(expectedError)
         launchesRepository
-            .getLaunches()
+            .getLaunches(launchParams)
             .test()
             .assertError(expectedError)
 
-        verify { launchesDataSource.fetchLaunches() }
+        verify { launchesDataSource.fetchLaunches(launchParams) }
     }
 }

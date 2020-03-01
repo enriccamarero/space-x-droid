@@ -3,7 +3,7 @@ package com.ecamarero.spacex.network.launches.model
 import com.ecamarero.spacex.domain.launches.repository.LaunchParams
 import com.ecamarero.spacex.domain.launches.repository.LaunchParams.Order
 
-object LaunchParamsMapper {
+object LaunchRequestMapper {
     fun mapToRequests(params: LaunchParams): List<LaunchRequest> {
         val launchYears = params.launchYears
         val order = if (params.order is Order.Ascending) ASCENDING else DESCENDING

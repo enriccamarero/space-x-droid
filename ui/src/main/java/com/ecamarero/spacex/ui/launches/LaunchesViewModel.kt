@@ -6,8 +6,8 @@ import com.ecamarero.spacex.domain.company.usecase.GetCompanyInfo
 import com.ecamarero.spacex.domain.launches.repository.LaunchParams.Order.Ascending
 import com.ecamarero.spacex.domain.launches.repository.LaunchParams.Order.Descending
 import com.ecamarero.spacex.domain.launches.usecase.GetLaunches
-import com.ecamarero.spacex.ui.company.model.CompanyUIMapper.toCompanyString
 import com.ecamarero.spacex.ui.company.model.CompanyInfoState
+import com.ecamarero.spacex.ui.company.model.CompanyUIMapper.toCompanyString
 import com.ecamarero.spacex.ui.launches.model.LaunchesActivityState
 import com.ecamarero.spacex.ui.launches.model.LaunchesFilterState
 import com.ecamarero.spacex.ui.launches.model.LaunchesUIMapper
@@ -34,8 +34,8 @@ class LaunchesViewModel @Inject constructor(
     internal val launchesLiveData = _launchesLiveData
 
     private val _companyInfoLiveData =
-        MutableLiveData<CompanyInfoState>().apply { value =
-            CompanyInfoState()
+        MutableLiveData<CompanyInfoState>().apply {
+            value = CompanyInfoState()
         }
     internal val companyInfoLiveData = _companyInfoLiveData
 
@@ -130,7 +130,7 @@ class LaunchesViewModel @Inject constructor(
     ) {
         getLaunches(
             onlySuccessful = onlySuccessfulLaunches,
-            launchYear = years.map { it.toInt() },
+            launchYears = years.map { it.toInt() },
             order = if (sorting == Sorting.Descending) Descending else Ascending
         )
             .map(LaunchesUIMapper::toUI)
@@ -139,7 +139,8 @@ class LaunchesViewModel @Inject constructor(
                 _launchesLiveData.postValue(_launchesLiveData.value?.copy(loading = true))
             }
             .subscribe({
-                _launchesLiveData.value = _launchesLiveData.value?.copy(launches = it, error = null, loading = false)
+                _launchesLiveData.value =
+                    _launchesLiveData.value?.copy(launches = it, error = null, loading = false)
             }, {
                 _launchesLiveData.value = _launchesLiveData.value?.copy(loading = false, error = it)
             })
@@ -163,7 +164,7 @@ class LaunchesViewModel @Inject constructor(
     }
 
     fun onOnlySuccessfulLaunchesChanged(checked: Boolean) {
-        if(stateSubject.value?.onlySuccessfulLaunches != checked) {
+        if (stateSubject.value?.onlySuccessfulLaunches != checked) {
             inputSubject.onNext(LaunchesIntention.OnlySuccess(checked))
         }
     }

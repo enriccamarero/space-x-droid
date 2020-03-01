@@ -18,6 +18,7 @@ class GetLaunchesTest {
     val testSchedulerRule = RxImmediateSchedulerRule()
 
     private val launchesRepository: LaunchesRepository = mockk()
+
     private lateinit var getLaunches: GetLaunches
 
     @Before
@@ -28,39 +29,44 @@ class GetLaunchesTest {
     @Test
     fun `Get Launches calls the repository`() {
         every { launchesRepository.getLaunches(any()) } returns Single.just(listOf())
-        getLaunches()
+        getLaunches(
+            order = LaunchParams.Order.Ascending,
+            onlySuccessful = true,
+            launchYears = emptyList()
+        )
+            .test()
+        verify { launchesRepository.getLaunches(any()) }
+    }
+
+
+    @Suppress("USELESS_IS_CHECK")
+    @Test
+    fun `Get Launches completes and returns a list of launches`() {
+        every { launchesRepository.getLaunches(any()) } returns Single.just(listOf())
+        getLaunches(
+            order = LaunchParams.Order.Ascending,
+            onlySuccessful = true,
+            launchYears = emptyList()
+        )
             .test()
             .assertComplete()
             .assertNoErrors()
+            .assertValue { it is List<Launch> }
         verify { launchesRepository.getLaunches(any()) }
     }
 
     @Test
-    fun `Get Launches returns a result with data when repository returns data`() {
-        every { launchesRepository.getLaunches(any()) } returns Single.just(listOf())
-        getLaunches()
-            .test()
-            .assertComplete()
-            .assertNoErrors()
-            .assertValue { it is List<Launch>}
-    }
-
-    @Test
-    fun `Get Launches returns a result with error when repository returns error`() {
+    fun `Get Launches can fail`() {
         val throwable = Throwable()
         every { launchesRepository.getLaunches(any()) } returns Single.error(throwable)
-        getLaunches()
+        getLaunches(
+            order = LaunchParams.Order.Ascending,
+            onlySuccessful = true,
+            launchYears = emptyList()
+        )
             .test()
+            .assertNotComplete()
             .assertError(throwable)
+        verify { launchesRepository.getLaunches(any()) }
     }
-
-    @Test
-    fun `Get Launches takes sorting, launch successfulness and launch year as parameters`() {
-        every { launchesRepository.getLaunches(any()) } returns Single.just(listOf())
-        getLaunches(order = LaunchParams.Order.Ascending, launchYear = 2002, launchSuccessful = true)
-            .test()
-            .assertComplete()
-            .assertNoErrors()
-    }
-
 }

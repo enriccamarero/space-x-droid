@@ -1,6 +1,5 @@
 package com.ecamarero.spacex.domain.utils
 
-import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import org.junit.rules.TestRule
@@ -16,13 +15,11 @@ class RxImmediateSchedulerRule : TestRule {
                 RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
                 RxJavaPlugins.setComputationSchedulerHandler { Schedulers.trampoline() }
                 RxJavaPlugins.setNewThreadSchedulerHandler { Schedulers.trampoline() }
-                RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
 
                 try {
                     base.evaluate()
                 } finally {
                     RxJavaPlugins.reset()
-                    RxAndroidPlugins.reset()
                 }
             }
         }

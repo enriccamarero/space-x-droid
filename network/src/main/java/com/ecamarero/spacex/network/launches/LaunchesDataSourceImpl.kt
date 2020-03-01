@@ -3,7 +3,7 @@ package com.ecamarero.spacex.network.launches
 import com.ecamarero.spacex.domain.launches.datasource.LaunchesDataSource
 import com.ecamarero.spacex.domain.launches.model.Launch
 import com.ecamarero.spacex.domain.launches.repository.LaunchParams
-import com.ecamarero.spacex.network.launches.model.LaunchParamsMapper
+import com.ecamarero.spacex.network.launches.model.LaunchRequestMapper
 import com.ecamarero.spacex.network.launches.model.LaunchResponseMapper
 import io.reactivex.Single
 import javax.inject.Inject
@@ -13,7 +13,7 @@ class LaunchesDataSourceImpl @Inject constructor(
 ) : LaunchesDataSource {
 
     override fun fetchLaunches(params: LaunchParams): Single<List<Launch>> = Single.defer {
-        val requests = LaunchParamsMapper.mapToRequests(params)
+        val requests = LaunchRequestMapper.mapToRequests(params)
         val calls = requests.map {
             launchesApi.launches(
                 launchYear = it.launchYear,
