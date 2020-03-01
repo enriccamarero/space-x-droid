@@ -1,4 +1,4 @@
-package com.ecamarero.spacex.domain.usecase
+package com.ecamarero.spacex.domain.launches.usecase
 
 import com.ecamarero.spacex.domain.launches.model.Launch
 import com.ecamarero.spacex.domain.launches.repository.LaunchParams

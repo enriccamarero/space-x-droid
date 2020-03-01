@@ -5,9 +5,9 @@ import com.ecamarero.spacex.domain.launches.model.Launch
 import io.reactivex.Single
 import javax.inject.Inject
 
-class LaunchesRepository @Inject constructor(
+class LaunchesRepository @Inject internal constructor(
     private val launchesDataSource: LaunchesDataSource
 ) {
-    fun getLaunches(params: LaunchParams? = null): Single<List<Launch>> =
+    fun getLaunches(params: LaunchParams): Single<List<Launch>> =
         launchesDataSource.fetchLaunches(params)
 }

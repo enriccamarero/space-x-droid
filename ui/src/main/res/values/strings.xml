@@ -5,7 +5,7 @@
     <string name="rocket_label">Rocket:</string>
     <string name="days_from_now_label">Days from now:</string>
     <string name="days_since_now_label">Days since now:</string>
-    <string name="filter_dialog_title">Options</string>
+    <string name="filter_dialog_title">Filter by</string>
     <string name="filter_label_launch_year">Launch year</string>
     <string name="filter_label_sort">Sort</string>
     <string name="filter_label_successful_launch">Only successful launches</string>
@@ -13,4 +13,6 @@
     <string name="read_article_text">Read article</string>
     <string name="play_video_text">Play video</string>
     <string name="open_wikipedia_text">Open Wikipedia</string>
+    <string name="empty_state_prompt">I\'m the only result to your query.</string>
+    <string name="change_filters">Change filters</string>
 </resources>

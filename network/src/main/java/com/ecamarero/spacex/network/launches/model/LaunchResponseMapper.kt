@@ -1,10 +1,12 @@
 package com.ecamarero.spacex.network.launches.model
 
 import com.ecamarero.spacex.domain.launches.model.Launch
-import com.ecamarero.spacex.domain.launches.model.Links
-import com.ecamarero.spacex.domain.launches.model.Rocket
+import com.ecamarero.spacex.domain.launches.model.Launch.Links
+import com.ecamarero.spacex.domain.launches.model.Launch.Rocket
+import com.ecamarero.spacex.network.launches.model.LaunchResponse.LinksReponse
+import com.ecamarero.spacex.network.launches.model.LaunchResponse.RocketResponse
 
-object LaunchResponseMapper {
+internal object LaunchResponseMapper {
     fun toLaunches(from: List<LaunchResponse>): List<Launch> {
         return from.map(this::toLaunch)
     }
@@ -20,26 +22,26 @@ object LaunchResponseMapper {
             links = LinksResponseMapper.toLinks(from.links)
         )
     }
-}
 
-object RocketResponseMapper {
-    fun toRocket(from: RocketResponse): Rocket {
-        return Rocket(
-            rocketName = from.rocketName,
-            rocketType = from.rocketType
-        )
+    private object RocketResponseMapper {
+        fun toRocket(from: RocketResponse): Rocket {
+            return Rocket(
+                rocketName = from.rocketName,
+                rocketType = from.rocketType
+            )
+        }
     }
-}
 
-object LinksResponseMapper {
-    fun toLinks(from: LinksReponse): Links {
-        return Links(
-            missionPatch = from.missionPatch,
-            missionPatchSmall = from.missionPatchSmall,
-            articleLink = from.articleLink,
-            wikipedia = from.wikipedia,
-            videoLink = from.videoLink,
-            youtubeId = from.youtubeId
-        )
+    private object LinksResponseMapper {
+        fun toLinks(from: LinksReponse): Links {
+            return Links(
+                missionPatch = from.missionPatch,
+                missionPatchSmall = from.missionPatchSmall,
+                articleLink = from.articleLink,
+                wikipedia = from.wikipedia,
+                videoLink = from.videoLink,
+                youtubeId = from.youtubeId
+            )
+        }
     }
 }

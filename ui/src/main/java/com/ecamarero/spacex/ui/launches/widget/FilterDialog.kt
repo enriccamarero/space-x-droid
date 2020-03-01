@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import com.ecamarero.spacex.ui.R
 import com.ecamarero.spacex.ui.launches.LaunchesViewModel
-import com.ecamarero.spacex.ui.launches.Sorting
+import com.ecamarero.spacex.ui.launches.LaunchesViewModel.Sorting
 import com.ecamarero.spacex.ui.utils.hideKeyboard
 import com.ecamarero.spacex.ui.utils.observeNonNull
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -60,7 +60,7 @@ class FilterDialog : BottomSheetDialogFragment() {
     }
 
     private fun setListeners() {
-        text_input_text_years.setOnEditorActionListener { v: TextView?, actionId: Int, event: KeyEvent? ->
+        text_input_text_years.setOnEditorActionListener { v: TextView?, _: Int, _: KeyEvent? ->
             v?.text.let { inputText ->
                 viewModel.onYearAdded(inputText.toString())
                 v?.text = ""
@@ -73,7 +73,7 @@ class FilterDialog : BottomSheetDialogFragment() {
             viewModel.onSortingChanged()
         }
 
-        successful_switch.setOnCheckedChangeListener { buttonView, isChecked ->
+        successful_switch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onOnlySuccessfulLaunchesChanged(isChecked)
         }
     }
@@ -109,8 +109,7 @@ class FilterDialog : BottomSheetDialogFragment() {
     }
 
     companion object {
-        fun newInstance(): FilterDialog =
-            FilterDialog()
+        fun newInstance(): FilterDialog = FilterDialog()
 
         internal val TAG = FilterDialog::class.java.simpleName
     }

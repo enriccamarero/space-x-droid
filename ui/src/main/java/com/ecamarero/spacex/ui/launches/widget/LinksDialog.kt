@@ -38,7 +38,7 @@ class LinksDialog : BottomSheetDialogFragment() {
         val articleLink = arguments?.getString(ARTICLE_KEY)
         setLinkToView(articleLink, article_link)
 
-        if(wikipediaLink == null && videoLink == null && articleLink == null) {
+        if (wikipediaLink == null && videoLink == null && articleLink == null) {
             no_data_text.visibility = View.VISIBLE
         } else {
             no_data_text.visibility = View.GONE
@@ -53,8 +53,8 @@ class LinksDialog : BottomSheetDialogFragment() {
             view.visibility = View.VISIBLE
             view.setOnClickListener {
                 Intent(Intent.ACTION_VIEW).apply {
-                    data = Uri.parse(url);
-                    startActivity(this);
+                    data = Uri.parse(url)
+                    startActivity(this)
                 }
             }
         } else {

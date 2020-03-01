@@ -1,8 +1,8 @@
 package com.ecamarero.spacex.domain.launches.repository
 
 data class LaunchParams(
-    val launchYear: Int? = null,
-    val launchSuccess: Boolean? = null,
+    val launchYears: Collection<Int> = emptyList(),
+    val onlySuccessful: Boolean = false,
     val order: Order = Order.Ascending
 ) {
     sealed class Order {

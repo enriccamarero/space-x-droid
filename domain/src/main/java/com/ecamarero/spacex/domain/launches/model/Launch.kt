@@ -10,18 +10,18 @@ data class Launch(
     val launchDateUtc: Date,
     val rocket: Rocket,
     val links: Links
-)
+) {
+    data class Rocket(
+        val rocketName: String,
+        val rocketType: String
+    )
 
-data class Rocket(
-    val rocketName: String,
-    val rocketType: String
-)
-
-data class Links(
-    val missionPatch: String?,
-    val missionPatchSmall: String?,
-    val articleLink: String?,
-    val wikipedia: String?,
-    val videoLink: String?,
-    val youtubeId: String?
-)
+    data class Links(
+        val missionPatch: String?,
+        val missionPatchSmall: String?,
+        val articleLink: String?,
+        val wikipedia: String?,
+        val videoLink: String?,
+        val youtubeId: String?
+    )
+}

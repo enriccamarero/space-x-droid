@@ -6,30 +6,28 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/wikipedia_link"
-        style="@style/Widget.MaterialComponents.TextInputEditText.FilledBox"
+        style="@style/SpaceXControl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/open_wikipedia_text" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/video_link"
-        style="@style/Widget.MaterialComponents.TextInputEditText.FilledBox"
+        style="@style/SpaceXControl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/play_video_text" />
 
-
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/article_link"
-        style="@style/Widget.MaterialComponents.TextInputEditText.FilledBox"
+        style="@style/SpaceXControl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/read_article_text" />
 
-
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/no_data_text"
-        style="@style/Widget.MaterialComponents.TextInputEditText.FilledBox"
+        style="@style/SpaceXControl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/no_data_message"

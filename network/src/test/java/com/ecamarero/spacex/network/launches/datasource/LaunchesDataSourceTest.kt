@@ -68,7 +68,7 @@ class LaunchesDataSourceTest {
     fun `Fetching all successful launches only returns those launches`() {
         val launchSuccess = true
         val launchParams = LaunchParams(
-            launchSuccess = launchSuccess
+            onlySuccessful = launchSuccess
         )
         dataSource
             .fetchLaunches(launchParams)
@@ -83,7 +83,7 @@ class LaunchesDataSourceTest {
     fun `Fetching all unsuccessful launches only returns those launches`() {
         val launchSuccess = false
         val launchParams = LaunchParams(
-            launchSuccess = launchSuccess
+            onlySuccessful = launchSuccess
         )
         dataSource
             .fetchLaunches(launchParams)

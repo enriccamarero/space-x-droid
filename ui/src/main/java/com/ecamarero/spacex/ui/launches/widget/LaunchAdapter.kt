@@ -11,9 +11,10 @@ import com.ecamarero.spacex.ui.launches.model.LaunchUI
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_launch.view.*
 
-internal class LaunchAdapter(val onItemSelected: (LaunchUI) -> Unit) : ListAdapter<LaunchUI, LaunchAdapter.ViewHolder>(
-    LaunchDiffCallback
-) {
+internal class LaunchAdapter(val onItemSelected: (LaunchUI) -> Unit) :
+    ListAdapter<LaunchUI, LaunchAdapter.ViewHolder>(
+        LaunchDiffCallback
+    ) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             LayoutInflater.from(parent.context).inflate(
@@ -35,12 +36,14 @@ internal class LaunchAdapter(val onItemSelected: (LaunchUI) -> Unit) : ListAdapt
                 if (item.pastLaunch) context.getString(R.string.days_from_now_label) else context.getString(
                     R.string.days_since_now_label
                 )
-            days_until_text.text = "${item.daysForLaunch}"
-            success_launch_image.setImageDrawable(when(item.successfulLaunch){
-                true -> context.getDrawable(R.drawable.ic_check_black_24dp)
-                false -> context.getDrawable(R.drawable.ic_clear_black_24dp)
-                null -> null
-            })
+            days_until_text.text = item.daysForLaunch
+            success_launch_image.setImageDrawable(
+                when (item.successfulLaunch) {
+                    true -> context.getDrawable(R.drawable.ic_check_black_24dp)
+                    false -> context.getDrawable(R.drawable.ic_clear_black_24dp)
+                    null -> null
+                }
+            )
             setOnClickListener {
                 onItemSelected(item)
             }

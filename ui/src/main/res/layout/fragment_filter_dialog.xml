@@ -1,49 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <com.google.android.material.textview.MaterialTextView
-        style="@style/Base.Widget.MaterialComponents.TextInputEditText"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:text="@string/filter_dialog_title" />
+        android:orientation="vertical">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/text_input_layout_years"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/text_input_text_years"
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/Base.Widget.MaterialComponents.TextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/filter_label_launch_year"
-            android:imeOptions="actionDone"
-            android:inputType="numberSigned" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:background="@color/design_default_color_primary"
+            android:text="@string/filter_dialog_title" />
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/years_chip_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_years"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/sorting_text"
-        style="@style/Widget.MaterialComponents.TextInputEditText.FilledBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:drawableEnd="@drawable/ic_arrow_upward_black_24dp"
-        android:text="@string/filter_label_sort" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_input_text_years"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/filter_label_launch_year"
+                android:imeOptions="actionDone"
+                android:inputType="numberSigned" />
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/successful_switch"
-        style="@style/Widget.MaterialComponents.TextInputEditText.FilledBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/filter_label_successful_launch" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-</LinearLayout>
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/years_chip_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/sorting_text"
+            style="@style/SpaceXControl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_arrow_upward_black_24dp"
+            android:focusableInTouchMode="false"
+            android:text="@string/filter_label_sort" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/successful_switch"
+            style="@style/SpaceXControl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="false"
+            android:text="@string/filter_label_successful_launch" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

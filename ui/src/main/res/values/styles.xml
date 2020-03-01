@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="SpaceXControl" parent="Widget.MaterialComponents.TextInputEditText.FilledBox">
+        <item name="android:focusableInTouchMode">false</item>
+    </style>
+</resources>

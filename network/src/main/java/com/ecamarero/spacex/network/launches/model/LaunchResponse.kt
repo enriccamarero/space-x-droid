@@ -11,18 +11,20 @@ data class LaunchResponse(
     @SerializedName("rocket") val rocket: RocketResponse,
     @SerializedName("launch_success") val launchSuccess: Boolean?,
     @SerializedName("links") val links: LinksReponse
-)
+) {
 
-data class RocketResponse(
-    @SerializedName("rocket_name") val rocketName: String,
-    @SerializedName("rocket_id") val rocketType: String
-)
+    data class RocketResponse(
+        @SerializedName("rocket_name") val rocketName: String,
+        @SerializedName("rocket_id") val rocketType: String
+    )
 
-data class LinksReponse(
-    @SerializedName("mission_patch") val missionPatch: String?,
-    @SerializedName("mission_patch_small") val missionPatchSmall: String?,
-    @SerializedName("article_link") val articleLink: String?,
-    @SerializedName("wikipedia") val wikipedia: String?,
-    @SerializedName("video_link") val videoLink: String?,
-    @SerializedName("youtube_id") val youtubeId: String?
-)
+    data class LinksReponse(
+        @SerializedName("mission_patch") val missionPatch: String?,
+        @SerializedName("mission_patch_small") val missionPatchSmall: String?,
+        @SerializedName("article_link") val articleLink: String?,
+        @SerializedName("wikipedia") val wikipedia: String?,
+        @SerializedName("video_link") val videoLink: String?,
+        @SerializedName("youtube_id") val youtubeId: String?
+    )
+
+}

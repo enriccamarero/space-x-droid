@@ -1,4 +1,4 @@
-package com.ecamarero.spacex.domain.usecase
+package com.ecamarero.spacex.domain.launches.usecase
 
 import com.ecamarero.spacex.domain.launches.model.Launch
 import com.ecamarero.spacex.domain.launches.repository.LaunchParams
@@ -7,21 +7,20 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class GetLaunches internal @Inject constructor(
+class GetLaunches @Inject internal constructor(
     private val launchesRepository: LaunchesRepository
 ) {
-
     operator fun invoke(
         order: LaunchParams.Order = LaunchParams.Order.Ascending,
-        launchSuccessful: Boolean? = null,
-        launchYear: Int? = null
+        onlySuccessful: Boolean = false,
+        launchYear: Collection<Int> = emptyList()
     ): Observable<List<Launch>> {
         return launchesRepository
             .getLaunches(
                 LaunchParams(
-                    launchYear = launchYear,
+                    launchYears = launchYear,
                     order = order,
-                    launchSuccess = launchSuccessful
+                    onlySuccessful = onlySuccessful
                 )
             )
             .toObservable()
