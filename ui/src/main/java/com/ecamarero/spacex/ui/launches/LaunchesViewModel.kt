@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ecamarero.spacex.domain.usecase.GetLaunches
 import com.ecamarero.spacex.ui.launches.model.LaunchesActivityState
+import com.ecamarero.spacex.ui.launches.model.LaunchesFilterState
 import com.ecamarero.spacex.ui.launches.model.LaunchesUIMapper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -15,7 +16,9 @@ class LaunchesViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _filterLiveData =
-        MutableLiveData<LaunchesFilterState>().apply { value = LaunchesFilterState() }
+        MutableLiveData<LaunchesFilterState>().apply { value =
+            LaunchesFilterState()
+        }
     internal val filterLiveData = _filterLiveData
 
     private val _launchesLiveData =
@@ -71,12 +74,6 @@ class LaunchesViewModel @Inject constructor(
         ) ?: LaunchesFilterState(onlySuccessfulLaunches = checked)
     }
 }
-
-data class LaunchesFilterState(
-    val years: Set<String> = emptySet(),
-    val sorting: Sorting = Sorting.Ascending,
-    val onlySuccessfulLaunches: Boolean = false
-)
 
 sealed class Sorting {
     object Ascending : Sorting()

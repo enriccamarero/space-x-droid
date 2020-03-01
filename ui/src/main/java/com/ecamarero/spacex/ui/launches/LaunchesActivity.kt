@@ -1,13 +1,11 @@
 package com.ecamarero.spacex.ui.launches
 
-import android.content.Context
 import android.os.Bundle
-import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ecamarero.spacex.ui.R
+import com.ecamarero.spacex.ui.launches.widget.FilterDialog
 import com.ecamarero.spacex.ui.launches.widget.LaunchAdapter
 import com.ecamarero.spacex.ui.utils.observeNonNull
 import dagger.android.AndroidInjection

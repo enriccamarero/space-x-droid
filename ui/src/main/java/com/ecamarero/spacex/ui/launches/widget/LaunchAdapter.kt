@@ -36,6 +36,11 @@ internal class LaunchAdapter : ListAdapter<LaunchUI, LaunchAdapter.ViewHolder>(
                     R.string.days_since_now_label
                 )
             days_until_text.text = "${item.daysForLaunch}"
+            success_launch_image.setImageDrawable(when(item.successfulLaunch){
+                true -> context.getDrawable(R.drawable.ic_check_black_24dp)
+                false -> context.getDrawable(R.drawable.ic_clear_black_24dp)
+                null -> null
+            })
         }
     }
 

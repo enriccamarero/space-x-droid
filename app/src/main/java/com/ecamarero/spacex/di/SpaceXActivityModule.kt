@@ -1,7 +1,7 @@
 package com.ecamarero.spacex.di
 
 import androidx.lifecycle.ViewModel
-import com.ecamarero.spacex.ui.launches.FilterDialog
+import com.ecamarero.spacex.ui.launches.widget.FilterDialog
 import com.ecamarero.spacex.ui.launches.LaunchesActivity
 import com.ecamarero.spacex.ui.launches.LaunchesViewModel
 import dagger.Binds

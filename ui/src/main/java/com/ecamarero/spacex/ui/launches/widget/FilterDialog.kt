@@ -1,4 +1,4 @@
-package com.ecamarero.spacex.ui.launches
+package com.ecamarero.spacex.ui.launches.widget
 
 import android.content.DialogInterface
 import android.os.Bundle
@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import com.ecamarero.spacex.ui.R
+import com.ecamarero.spacex.ui.launches.LaunchesViewModel
+import com.ecamarero.spacex.ui.launches.Sorting
 import com.ecamarero.spacex.ui.utils.hideKeyboard
 import com.ecamarero.spacex.ui.utils.observeNonNull
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
