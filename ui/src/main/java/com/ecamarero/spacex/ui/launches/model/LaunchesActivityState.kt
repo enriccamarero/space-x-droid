@@ -5,3 +5,4 @@ internal data class LaunchesActivityState(
     val loading: Boolean = false,
     val error: Throwable? = null
 )
+

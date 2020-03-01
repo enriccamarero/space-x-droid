@@ -15,4 +15,9 @@
     <string name="open_wikipedia_text">Open Wikipedia</string>
     <string name="empty_state_prompt">I\'m the only result to your query.</string>
     <string name="change_filters">Change filters</string>
+    <string name="company_label">Company</string>
+    <string name="launches_label">Launches</string>
+    <string name="company_info_error_message">Couldn\'t load company info. Tap to retry</string>
+    <string name="error_message">Something is not working properly</string>
+    <string name="retry_prompt">Retry</string>
 </resources>

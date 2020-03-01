@@ -1,6 +1,6 @@
 package com.ecamarero.spacex.domain.launches.model
 
-import java.util.*
+import java.util.Date
 
 data class Launch(
     val flightNumber: Int,

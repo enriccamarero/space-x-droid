@@ -4,7 +4,7 @@ import com.ecamarero.spacex.domain.launches.repository.LaunchParams
 import com.ecamarero.spacex.domain.launches.datasource.LaunchesDataSource
 import com.ecamarero.spacex.domain.launches.model.Launch
 import com.ecamarero.spacex.domain.utils.RxImmediateSchedulerRule
-import com.ecamarero.spacex.network.client.HttpClientModule
+import com.ecamarero.spacex.di.HttpClientModule
 import com.ecamarero.spacex.network.launches.LaunchesDataSourceImpl
 import com.google.common.truth.Truth
 import org.junit.Before
@@ -16,7 +16,7 @@ class LaunchesDataSourceTest {
     @get:Rule
     val testSchedulerRule = RxImmediateSchedulerRule()
 
-    val clientModule = HttpClientModule
+    val clientModule = com.ecamarero.spacex.di.HttpClientModule
 
     private lateinit var dataSource: LaunchesDataSource
 

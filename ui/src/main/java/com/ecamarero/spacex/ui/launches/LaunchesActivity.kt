@@ -15,7 +15,9 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_space_x.*
 import kotlinx.android.synthetic.main.app_bar_layout.*
+import kotlinx.android.synthetic.main.company_info_layout.*
 import kotlinx.android.synthetic.main.empty_state_layout.*
+import kotlinx.android.synthetic.main.launches_layout.*
 import kotlinx.android.synthetic.main.loading_layout.*
 import javax.inject.Inject
 
@@ -36,22 +38,23 @@ class LaunchesActivity : AppCompatActivity() {
         AndroidInjection.inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(LaunchesViewModel::class.java)
         super.onCreate(savedInstanceState)
-        viewModel.loadLaunches()
         setContentView(R.layout.activity_space_x)
+        setUpRecyclerView()
+        observeLaunches()
+        observeCompanyInfo()
+        setListeners()
+    }
 
+    private fun setUpRecyclerView() {
         launch_list.adapter = launchAdapter
         launch_list.layoutManager = LinearLayoutManager(this)
+    }
 
-        observeNonNull(viewModel.launchesLiveData, { state ->
-            renderList(state.launches)
-            renderLoading(state.loading)
-            renderError(state.error)
-        })
-
+    private fun setListeners() {
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_filter -> {
-                    FilterDialog.newInstance().show(supportFragmentManager, FilterDialog.TAG)
+                    openFilter()
                     true
                 }
                 else -> false
@@ -59,27 +62,67 @@ class LaunchesActivity : AppCompatActivity() {
         }
 
         empty_button.setOnClickListener {
-            FilterDialog.newInstance().show(supportFragmentManager, FilterDialog.TAG)
+            openFilter()
         }
     }
 
-    private fun renderList(launches: List<LaunchUI>?) {
+    private fun openFilter() {
+        FilterDialog.newInstance().show(supportFragmentManager, FilterDialog.TAG)
+    }
+
+    private fun observeCompanyInfo() {
+        observeNonNull(viewModel.companyInfoLiveData, { state ->
+            renderCompanyList(state.companyInfo)
+            renderCompanyLoading(state.loading)
+            renderCompanyError(state.error)
+        })
+    }
+
+    private fun observeLaunches() {
+        observeNonNull(viewModel.launchesLiveData, { state ->
+            renderLaunchesList(state.launches)
+            renderLaunchesLoading(state.loading)
+            renderLaunchesError(state.error)
+        })
+    }
+
+    private fun renderLaunchesList(launches: List<LaunchUI>?) {
         launches?.let {
-            launchAdapter.submitList(it)
+            launchAdapter.submitList(it) {
+                launch_list.scrollToPosition(0)
+            }
             empty.visibility = if (launches.isEmpty()) View.VISIBLE else View.GONE
         }
     }
 
-    private fun renderLoading(isLoading: Boolean) {
+    private fun renderLaunchesLoading(isLoading: Boolean) {
         loading.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
-    private fun renderError(error: Throwable?) {
+    private fun renderLaunchesError(error: Throwable?) {
         error?.let {
             Snackbar
-                .make(root, "Something is not working properly", Snackbar.LENGTH_INDEFINITE)
-                .setAction("Retry") { viewModel.loadLaunches() }
+                .make(root, getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
+                .setAction(getString(R.string.retry_prompt)) { viewModel.loadLaunches() }
                 .show()
+        }
+    }
+
+    private fun renderCompanyList(companyInfo: String?) {
+        companyInfo?.let {
+            company_info_text.text = companyInfo
+        }
+        company_info_text.setOnClickListener(null)
+    }
+
+    private fun renderCompanyLoading(loading: Boolean) {
+        company_info_loading.visibility = if (loading) View.VISIBLE else View.GONE
+    }
+
+    private fun renderCompanyError(error: Throwable?) {
+        error?.let {
+            company_info_text.text = getString(R.string.company_info_error_message)
+            company_info_text.setOnClickListener { viewModel.loadCompanyInfo() }
         }
     }
 }

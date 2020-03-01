@@ -11,7 +11,9 @@ import javax.inject.Singleton
         AndroidSupportInjectionModule::class,
         SpaceXActivityModule::class,
         ViewModelFactoryModule::class,
-        LaunchesDataSourceModule::class
+        LaunchesDataSourceModule::class,
+        CompanyInfoDataSourceModule::class,
+        HttpClientModule::class
     ]
 )
 @Singleton

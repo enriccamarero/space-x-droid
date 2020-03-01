@@ -2,8 +2,12 @@ package com.ecamarero.spacex.ui.launches
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.ecamarero.spacex.domain.launches.repository.LaunchParams
+import com.ecamarero.spacex.domain.company.usecase.GetCompanyInfo
+import com.ecamarero.spacex.domain.launches.repository.LaunchParams.Order.Ascending
+import com.ecamarero.spacex.domain.launches.repository.LaunchParams.Order.Descending
 import com.ecamarero.spacex.domain.launches.usecase.GetLaunches
+import com.ecamarero.spacex.ui.company.model.CompanyUIMapper.toCompanyString
+import com.ecamarero.spacex.ui.company.model.CompanyInfoState
 import com.ecamarero.spacex.ui.launches.model.LaunchesActivityState
 import com.ecamarero.spacex.ui.launches.model.LaunchesFilterState
 import com.ecamarero.spacex.ui.launches.model.LaunchesUIMapper
@@ -17,7 +21,8 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class LaunchesViewModel @Inject constructor(
-    private val getLaunches: GetLaunches
+    private val getLaunches: GetLaunches,
+    private val getCompanyInfo: GetCompanyInfo
 ) : ViewModel() {
 
     private val _filterLiveData =
@@ -27,6 +32,12 @@ class LaunchesViewModel @Inject constructor(
     private val _launchesLiveData =
         MutableLiveData<LaunchesActivityState>().apply { value = LaunchesActivityState() }
     internal val launchesLiveData = _launchesLiveData
+
+    private val _companyInfoLiveData =
+        MutableLiveData<CompanyInfoState>().apply { value =
+            CompanyInfoState()
+        }
+    internal val companyInfoLiveData = _companyInfoLiveData
 
     private val inputSubject: Subject<LaunchesIntention> =
         BehaviorSubject.create<LaunchesIntention>()
@@ -39,10 +50,8 @@ class LaunchesViewModel @Inject constructor(
     init {
         setUpInputSubject()
         setUpStateSubject()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
+        loadCompanyInfo()
+        loadLaunches()
     }
 
     private fun setUpStateSubject() {
@@ -50,52 +59,68 @@ class LaunchesViewModel @Inject constructor(
             .doOnNext {
                 loadLaunches(it.sorting, it.onlySuccessfulLaunches, it.years)
             }
+            .doOnError { it.printStackTrace() }
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
+            .subscribe {
                 _filterLiveData.value = it
-            }) {
-
-                println("ERROR")
             }
             .addTo(compositeDisposable)
     }
 
     private fun setUpInputSubject() {
-        inputSubject.map {
-            stateSubject.onNext(
-                when (it) {
-                    is LaunchesIntention.AddYear -> {
-                        stateSubject.value!!.copy(
-                            years = stateSubject.value!!.years.plus(it.year)
-                        )
+        inputSubject
+            .debounce(300, TimeUnit.MILLISECONDS)
+            .map {
+                stateSubject.onNext(
+                    when (it) {
+                        is LaunchesIntention.AddYear -> {
+                            stateSubject.value!!.copy(
+                                years = stateSubject.value!!.years.plus(it.year)
+                            )
+                        }
+                        is LaunchesIntention.RemoveYear -> {
+                            stateSubject.value!!.copy(
+                                years = stateSubject.value!!.years.minus(it.year)
+                            )
+                        }
+                        is LaunchesIntention.OnlySuccess -> {
+                            stateSubject.value!!.copy(
+                                onlySuccessfulLaunches = it.onlySuccess
+                            )
+                        }
+                        LaunchesIntention.ReverseSorting -> {
+                            stateSubject.value!!.copy(
+                                sorting = if (stateSubject.value!!.sorting == Sorting.Ascending) Sorting.Descending else Sorting.Ascending
+                            )
+                        }
+                        LaunchesIntention.Refresh -> stateSubject.value!!
                     }
-                    is LaunchesIntention.RemoveYear -> {
-                        stateSubject.value!!.copy(
-                            years = stateSubject.value!!.years.minus(it.year)
-                        )
-                    }
-                    is LaunchesIntention.OnlySuccess -> {
-                        stateSubject.value!!.copy(
-                            onlySuccessfulLaunches = it.onlySuccess
-                        )
-                    }
-                    LaunchesIntention.ReverseSorting -> {
-                        stateSubject.value!!.copy(
-                            sorting = if (stateSubject.value!!.sorting == Sorting.Ascending) Sorting.Descending else Sorting.Ascending
-                        )
-                    }
-                    LaunchesIntention.Refresh -> stateSubject.value!!
-                }
-            )
-        }
+                )
+            }
+            .doOnError { it.printStackTrace() }
             .subscribeOn(Schedulers.computation())
-            .subscribe({}, {
-                println("ERROR")
-            }, {
-                println("COMPLETED")
-            })
+            .subscribe()
             .addTo(compositeDisposable)
+    }
+
+    internal fun loadCompanyInfo() {
+        getCompanyInfo()
+            .map {
+                toCompanyString(it)
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe {
+                _companyInfoLiveData.postValue(_companyInfoLiveData.value?.copy(loading = true))
+            }
+            .subscribe({
+                _companyInfoLiveData.value =
+                    _companyInfoLiveData.value?.copy(companyInfo = it, loading = false)
+            }, {
+                _companyInfoLiveData.value =
+                    _companyInfoLiveData.value?.copy(error = it, loading = false)
+            })
+            .addTo(compositeDisposable = compositeDisposable)
     }
 
     private fun loadLaunches(
@@ -106,21 +131,19 @@ class LaunchesViewModel @Inject constructor(
         getLaunches(
             onlySuccessful = onlySuccessfulLaunches,
             launchYear = years.map { it.toInt() },
-            order = if (sorting == Sorting.Descending) LaunchParams.Order.Descending else LaunchParams.Order.Ascending
+            order = if (sorting == Sorting.Descending) Descending else Ascending
         )
-            .debounce(300, TimeUnit.MILLISECONDS)
             .map(LaunchesUIMapper::toUI)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
                 _launchesLiveData.postValue(_launchesLiveData.value?.copy(loading = true))
             }
             .subscribe({
-                _launchesLiveData.value = _launchesLiveData.value?.copy(launches = it, error = null)
+                _launchesLiveData.value = _launchesLiveData.value?.copy(launches = it, error = null, loading = false)
             }, {
                 _launchesLiveData.value = _launchesLiveData.value?.copy(loading = false, error = it)
-            }, {
-                _launchesLiveData.value = _launchesLiveData.value?.copy(loading = false)
-            }).addTo(compositeDisposable = compositeDisposable)
+            })
+            .addTo(compositeDisposable = compositeDisposable)
     }
 
     fun removeYear(year: String) {
@@ -140,7 +163,9 @@ class LaunchesViewModel @Inject constructor(
     }
 
     fun onOnlySuccessfulLaunchesChanged(checked: Boolean) {
-        inputSubject.onNext(LaunchesIntention.OnlySuccess(checked))
+        if(stateSubject.value?.onlySuccessfulLaunches != checked) {
+            inputSubject.onNext(LaunchesIntention.OnlySuccess(checked))
+        }
     }
 
     fun loadLaunches() {
@@ -160,4 +185,3 @@ class LaunchesViewModel @Inject constructor(
         object Refresh : LaunchesIntention()
     }
 }
-
