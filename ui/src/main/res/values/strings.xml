@@ -9,4 +9,8 @@
     <string name="filter_label_launch_year">Launch year</string>
     <string name="filter_label_sort">Sort</string>
     <string name="filter_label_successful_launch">Only successful launches</string>
+    <string name="no_data_message">No extra data, yet</string>
+    <string name="read_article_text">Read article</string>
+    <string name="play_video_text">Play video</string>
+    <string name="open_wikipedia_text">Open Wikipedia</string>
 </resources>

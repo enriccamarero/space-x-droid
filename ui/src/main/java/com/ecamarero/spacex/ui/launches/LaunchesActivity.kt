@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ecamarero.spacex.ui.R
 import com.ecamarero.spacex.ui.launches.widget.FilterDialog
 import com.ecamarero.spacex.ui.launches.widget.LaunchAdapter
+import com.ecamarero.spacex.ui.launches.widget.LinksDialog
 import com.ecamarero.spacex.ui.utils.observeNonNull
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_space_x.*
@@ -19,7 +20,11 @@ class LaunchesActivity : AppCompatActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: LaunchesViewModel
 
-    private val launchAdapter: LaunchAdapter by lazy { LaunchAdapter() }
+    private val launchAdapter: LaunchAdapter by lazy {
+        LaunchAdapter {
+            LinksDialog.newInstance(it).show(supportFragmentManager, LinksDialog.TAG)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)

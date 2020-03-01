@@ -11,7 +11,7 @@ import com.ecamarero.spacex.ui.launches.model.LaunchUI
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_launch.view.*
 
-internal class LaunchAdapter : ListAdapter<LaunchUI, LaunchAdapter.ViewHolder>(
+internal class LaunchAdapter(val onItemSelected: (LaunchUI) -> Unit) : ListAdapter<LaunchUI, LaunchAdapter.ViewHolder>(
     LaunchDiffCallback
 ) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -41,6 +41,9 @@ internal class LaunchAdapter : ListAdapter<LaunchUI, LaunchAdapter.ViewHolder>(
                 false -> context.getDrawable(R.drawable.ic_clear_black_24dp)
                 null -> null
             })
+            setOnClickListener {
+                onItemSelected(item)
+            }
         }
     }
 
