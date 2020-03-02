@@ -1,5 +1,6 @@
 package com.ecamarero.spacex.ui.launches.widget
 
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.KeyEvent
@@ -25,11 +26,11 @@ class FilterDialog : BottomSheetDialogFragment() {
 
     private lateinit var viewModel: LaunchesViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
         AndroidSupportInjection.inject(this)
-        viewModel = ViewModelProvider(this, viewModelFactory)
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
             .get(LaunchesViewModel::class.java)
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(

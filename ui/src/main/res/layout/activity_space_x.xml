@@ -9,16 +9,15 @@
 
     <include layout="@layout/app_bar_layout" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/launch_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <include layout="@layout/company_info_layout" />
+    <include layout="@layout/loading_layout" />
 
-        <include layout="@layout/launches_layout" />
+    <include layout="@layout/empty_state_layout" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

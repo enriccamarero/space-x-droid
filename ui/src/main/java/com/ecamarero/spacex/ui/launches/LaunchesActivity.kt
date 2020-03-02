@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ecamarero.spacex.ui.R
 import com.ecamarero.spacex.ui.launches.model.LaunchUI
+import com.ecamarero.spacex.ui.launches.widget.CompanyInfoDialog
 import com.ecamarero.spacex.ui.launches.widget.FilterDialog
 import com.ecamarero.spacex.ui.launches.widget.LaunchAdapter
 import com.ecamarero.spacex.ui.launches.widget.LinksDialog
@@ -15,9 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_space_x.*
 import kotlinx.android.synthetic.main.app_bar_layout.*
-import kotlinx.android.synthetic.main.company_info_layout.*
 import kotlinx.android.synthetic.main.empty_state_layout.*
-import kotlinx.android.synthetic.main.launches_layout.*
 import kotlinx.android.synthetic.main.loading_layout.*
 import javax.inject.Inject
 
@@ -41,7 +40,6 @@ class LaunchesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_space_x)
         setUpRecyclerView()
         observeLaunches()
-        observeCompanyInfo()
         setListeners()
     }
 
@@ -57,6 +55,10 @@ class LaunchesActivity : AppCompatActivity() {
                     openFilter()
                     true
                 }
+                R.id.action_info -> {
+                    openCompanyInfo()
+                    true
+                }
                 else -> false
             }
         }
@@ -70,12 +72,8 @@ class LaunchesActivity : AppCompatActivity() {
         FilterDialog.newInstance().show(supportFragmentManager, FilterDialog.TAG)
     }
 
-    private fun observeCompanyInfo() {
-        observeNonNull(viewModel.companyInfoLiveData, { state ->
-            renderCompanyList(state.companyInfo)
-            renderCompanyLoading(state.loading)
-            renderCompanyError(state.error)
-        })
+    private fun openCompanyInfo() {
+        CompanyInfoDialog.newInstance().show(supportFragmentManager, CompanyInfoDialog.TAG)
     }
 
     private fun observeLaunches() {
@@ -105,24 +103,6 @@ class LaunchesActivity : AppCompatActivity() {
                 .make(root, getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE)
                 .setAction(getString(R.string.retry_prompt)) { viewModel.loadLaunches() }
                 .show()
-        }
-    }
-
-    private fun renderCompanyList(companyInfo: String?) {
-        companyInfo?.let {
-            company_info_text.text = companyInfo
-        }
-        company_info_text.setOnClickListener(null)
-    }
-
-    private fun renderCompanyLoading(loading: Boolean) {
-        company_info_loading.visibility = if (loading) View.VISIBLE else View.GONE
-    }
-
-    private fun renderCompanyError(error: Throwable?) {
-        error?.let {
-            company_info_text.text = getString(R.string.company_info_error_message)
-            company_info_text.setOnClickListener { viewModel.loadCompanyInfo() }
         }
     }
 }

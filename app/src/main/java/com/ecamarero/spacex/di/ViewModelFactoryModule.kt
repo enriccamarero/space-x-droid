@@ -12,6 +12,5 @@ import javax.inject.Singleton
 abstract class ViewModelFactoryModule {
 
     @Binds
-    @Singleton
     internal abstract fun bindsViewModelFactory(factory: SpaceXViewModelProviderFactory): ViewModelProvider.Factory
 }

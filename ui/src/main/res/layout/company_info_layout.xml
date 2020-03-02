@@ -17,6 +17,7 @@
             style="@style/Base.Widget.MaterialComponents.TextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/design_default_color_primary"
             android:text="@string/company_label"
             android:textAllCaps="true" />
 

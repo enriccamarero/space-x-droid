@@ -16,5 +16,4 @@ import javax.inject.Singleton
         HttpClientModule::class
     ]
 )
-@Singleton
 interface SpaceXAppComponent : AndroidInjector<SpaceXApp>

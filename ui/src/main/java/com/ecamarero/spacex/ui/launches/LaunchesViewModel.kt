@@ -115,7 +115,7 @@ class LaunchesViewModel @Inject constructor(
             }
             .subscribe({
                 _companyInfoLiveData.value =
-                    _companyInfoLiveData.value?.copy(companyInfo = it, loading = false)
+                    _companyInfoLiveData.value?.copy(companyInfo = it, loading = false, error = null)
             }, {
                 _companyInfoLiveData.value =
                     _companyInfoLiveData.value?.copy(error = it, loading = false)
